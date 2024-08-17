@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Configuration file for Log4j2 logging framework.
+    This configuration sets up console and file appenders,
+    and defines loggers with different logging levels.
+-->
+<Configuration>
+    <Appenders>
+        <!--
+            Console Appender:
+            Logs messages to the system console with a specific pattern.
+        -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <!--
+            Rolling File Appender:
+            Logs messages to a file with daily rotation.
+            The file name will include the date to differentiate logs for each day.
+        -->
+        <RollingFile name="File" fileName="test.log" filePattern="test-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <!--
+                    TimeBasedTriggeringPolicy:
+                    Triggers a rollover every day (interval="1").
+                -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!--
+            Logger for Spring MVC request handling with DEBUG level:
+            Logs detailed information useful for debugging.
+        -->
+        <Logger name="org.springframework.web.servlet.mvc.method.annotation" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <!--
+            Logger for Spring MVC request handling with INFO level:
+            Logs informational messages, including successful responses.
+        -->
+        <Logger name="org.springframework.web.servlet.mvc.method.annotation" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <!--
+            Logger for Spring MVC request handling with ERROR level:
+            Logs error messages, including exceptions and failures.
+        -->
+        <Logger name="org.springframework.web.servlet.mvc.method.annotation" level="error" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <!--
+            Root Logger:
+            The default logger configuration that captures all log messages.
+            Set to DEBUG level to capture all messages including debug, info, and error.
+        -->
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
