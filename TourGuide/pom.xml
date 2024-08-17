@@ -75,4 +75,16 @@
 		</plugins>
 	</build>
 
+
+	<reporting>
+		<plugins>
+			<!-- Plugin to generate rapport into project's site -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>3.2.2</version>
+			</plugin>
+		</plugins>
+	</reporting>
+
 </project>
