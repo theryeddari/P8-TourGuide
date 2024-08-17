@@ -2,7 +2,6 @@ package com.openclassrooms.tourguide.service;
 
 import java.util.List;
 
-import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
@@ -34,16 +33,25 @@ public class RewardsService {
 	public void calculateRewards(User user) {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtil.getAttractions();
-		
-		for(VisitedLocation visitedLocation : userLocations) {
-			for(Attraction attraction : attractions) {
-				if(user.getUserRewards().stream().noneMatch(r -> r.attraction.attractionName.equals(attraction.attractionName))) {
-					if(nearAttraction(visitedLocation, attraction)) {
+
+		//for each VisitedLocation of List<VisitedLocation> named userLocations, I filter all attraction of List<Attraction> named attractions
+		// and keep only attractions that user not visited thanks to the past proposal of the application (rewards)
+		// (so not present in List<userRewards> of User given by user.getUserReward)
+		userLocations.forEach(visitedLocation -> {
+
+			attractions.stream().filter(attraction ->
+					user.getUserRewards().stream().noneMatch(reward ->
+							reward.getAttraction().attractionName.equals(attraction.attractionName))
+			)
+					//Now I check if the attractions not visited by the user are close to the list of places where he is located into userLocations List<VisitedLocation>
+					// thank lambda stream for each userLocation and attraction with nearAttraction boolean method.
+					.filter(attraction -> nearAttraction(visitedLocation, attraction))
+					//for each nearby attraction I add the suggestion of the place to the user which includes
+					// the place visited, attraction to visit and the id of attraction and user into RewardPoints
+					.forEach(attraction -> {
 						user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
-					}
-				}
-			}
-		}
+					});
+		});
 	}
 	
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
