@@ -38,7 +38,10 @@ public class User {
 	}
 	
 	public void addUserReward(UserReward userReward) {
-		if(userRewards.stream().filter(r -> !r.attraction.attractionName.equals(userReward.attraction)).count() == 0) {
+
+		//Filter all userRewards in the list<UserReward> that do not have an attractionName equal to the attractionName of the userReward passed as a parameter
+		//to ensure that there are none. If this is the case the condition is respected, otherwise nothing
+		if(userRewards.stream().filter(r -> !r.attraction.attractionName.equals(userReward.attraction.attractionName)).count() == 0) {
 			userRewards.add(userReward);
 		}
 	}
