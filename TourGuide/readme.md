@@ -1,8 +1,11 @@
 # Technologies
 
-> Java 17  
-> Spring Boot 3.X  
+> Java 21
+> Spring Boot 3.2.2  
 > JUnit 5  
+> Log4j2
+> Jacoco
+> Surefire reporting
 
 # How to have gpsUtil, rewardCentral and tripPricer dependencies available ?
 
