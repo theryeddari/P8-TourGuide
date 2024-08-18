@@ -104,16 +104,15 @@ public class TourGuideService {
 		return nearbyAttractions;
 	}
 
+	/**
+	 * Registers a shutdown hook to ensure that the tracker stops tracking
+	 * when the Java Virtual Machine (JVM) is shutting down.
+	 */
 	private void addShutDownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				tracker.stopTracking();
-			}
-		});
+		Runtime.getRuntime().addShutdownHook(new Thread(tracker::stopTracking));
 	}
 
 	/**********************************************************************************
-	 * 
 	 * Methods Below: For Internal Testing
 	 * 
 	 **********************************************************************************/
