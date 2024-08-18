@@ -15,7 +15,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.logging.log4j.LogManager;
@@ -69,7 +68,7 @@ public class TourGuideService {
 	}
 
 	public List<User> getAllUsers() {
-		return internalUserMap.values().stream().collect(Collectors.toList());
+		return new ArrayList<>(internalUserMap.values());
 	}
 
 	public void addUser(User user) {
