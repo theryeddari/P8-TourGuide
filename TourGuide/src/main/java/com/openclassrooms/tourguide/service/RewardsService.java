@@ -36,24 +36,24 @@ public class RewardsService {
         //for each VisitedLocation of List<VisitedLocation> named userLocations, I filter all attraction of List<Attraction> named attractions
         // and keep only attractions that user not visited thanks to the past proposal of the application (rewards)
         // (so not present in List<userRewards> of User given by user.getUserReward)
-        userLocations.forEach(visitedLocation ->
-                attractions
-                        .stream()
+        //Finally i creat a list of UserReward, each one build with one visitedLocation and this attraction.
+        List<UserReward> updateRewards = userLocations.stream().flatMap(visitedLocation ->
+                attractions.stream()
                         .filter(attraction ->
-                                user
-                                    .getUserRewards()
-                                    .stream()
-                                    .noneMatch(reward ->
-                                            reward.getAttraction().attractionName.equals(attraction.attractionName))
-                        )
+                                user.getUserRewards()
+                                        .stream()
+                                        .noneMatch(reward -> reward.getAttraction().attractionName.equals(attraction.attractionName)))
                         //Now I check if the attractions not visited by the user are close to the list of places where he is located into userLocations List<VisitedLocation>
                         // thank lambda stream for each userLocation and attraction with nearAttraction boolean method.
-                        .filter(attraction ->
-                                nearAttraction(visitedLocation, attraction))
-                        //for each nearby attraction I add the suggestion of the place to the user which includes
-                        // the place visited, attraction to visit and the id of attraction and user into RewardPoints
-                        .forEach(attraction -> user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)))));
-    }
+                        .filter(attraction -> nearAttraction(visitedLocation, attraction))
+                        //for each nearby attraction I create a UserReward, (suggestion of the place to the user which includes
+                        // the place visited, attraction to visit and "the id of attraction and user into RewardPoints")
+                        .map( attraction -> new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)))).toList();
+
+        //at the end I put list<UserReward> named updateRewards I add the suggestions of the places to the user detail
+        updateRewards.forEach(user::addUserReward);
+
+      }
 
     public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
         return !(getDistance(attraction, location) > attractionProximityRange);
