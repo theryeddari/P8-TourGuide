@@ -24,8 +24,6 @@ import rewardCentral.RewardCentral;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
-import static com.openclassrooms.tourguide.utils.DistanceCalculator.*;
-
 @Service
 public class TourGuideService {
 	private final Logger logger = LogManager.getLogger(TourGuideService.class);
@@ -113,7 +111,7 @@ public class TourGuideService {
 		List<InfoAboutNearbyAttractionDTO> infoAboutNearbyAttractionDTOS = gpsUtil.getAttractions().stream()
 				.map(attraction -> {
 					// Calculate the distance between the user's location and the attraction
-					Double distance = calculateDistance(locationUser.latitude, locationUser.longitude, attraction.latitude, attraction.longitude);
+					Double distance = rewardsService.getDistance(locationUser,attraction);
 
 					// Log the calculated distance for debugging purposes
 					logger.debug("Calculated distance for attraction {}: {} miles", attraction.attractionName, distance);
