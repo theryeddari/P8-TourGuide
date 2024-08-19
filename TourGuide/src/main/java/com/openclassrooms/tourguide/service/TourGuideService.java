@@ -10,6 +10,9 @@ import com.openclassrooms.tourguide.user.UserReward;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +36,8 @@ public class TourGuideService {
 	private final RewardCentral rewardCentral = new RewardCentral();
 	public final Tracker tracker;
 	boolean testMode = true;
+	Executor executor = Executors.newFixedThreadPool(50);
+
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
 		this.gpsUtil = gpsUtil;
@@ -56,7 +61,7 @@ public class TourGuideService {
 
 	public VisitedLocation getUserLocation(User user) {
 		// we retrieve the location in the user details if it exists otherwise we just launch the tracker to retrieve it
-        return (!user.getVisitedLocations().isEmpty()) ? user.getLastVisitedLocation() : trackUserLocation(user);
+        return (!user.getVisitedLocations().isEmpty()) ? user.getLastVisitedLocation() : trackUserLocation(user).join();
 	}
 
 	public User getUser(String userName) {
@@ -82,12 +87,21 @@ public class TourGuideService {
 		return providers;
 	}
 
-	public VisitedLocation trackUserLocation(User user) {
-		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
-		user.addToVisitedLocations(visitedLocation);
-		rewardsService.calculateRewards(user);
-		return visitedLocation;
+	public CompletableFuture<VisitedLocation> trackUserLocation(User user) {
+		// Use CompletableFuture.supplyAsync to obtain the user's location asynchronously
+		return CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()), executor)
+				.thenApply(visitedLocation -> {
+					// Add the visited location to the user's list of visited locations
+					user.addToVisitedLocations(visitedLocation);
+
+					// Calculate the rewards for the user synchronously
+					rewardsService.calculateRewards(user);
+
+					// Return the visited location after rewards have been calculated
+					return visitedLocation;
+				});
 	}
+
 
 	/**
 	 * Retrieves the five closest tourist attractions to the user's current location.
