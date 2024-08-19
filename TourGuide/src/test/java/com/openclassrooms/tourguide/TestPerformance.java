@@ -5,10 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import gpsUtil.GpsUtil;
@@ -47,26 +47,38 @@ public class TestPerformance {
 
 	@Test
 	public void highVolumeTrackLocation() {
+		// Initialize services
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
-		InternalTestHelper.setInternalUserNumber(100);
+		InternalTestHelper.setInternalUserNumber(100000);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
-		List<User> allUsers;
-		allUsers = tourGuideService.getAllUsers();
+		// Get list of users
+		List<User> allUsers = tourGuideService.getAllUsers();
 
+		// Start timing
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		for (User user : allUsers) {
-			tourGuideService.trackUserLocation(user);
-		}
+
+		// Create a list of CompletableFutures for tracking locations
+		CompletableFuture<?>[] futures = allUsers.stream()
+				.map(tourGuideService::trackUserLocation)
+				.toArray(CompletableFuture[]::new);
+
+		// Wait for all futures to complete
+		CompletableFuture.allOf(futures).join();
+
+		// Stop timing
 		stopWatch.stop();
 		tourGuideService.tracker.stopTracking();
 
+		// Output the time elapsed
 		System.out.println("highVolumeTrackLocation: Time Elapsed: "
 				+ TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
+
+		// Assert that the test finishes within 15 minutes
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
