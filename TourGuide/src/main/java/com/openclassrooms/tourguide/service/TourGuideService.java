@@ -36,7 +36,9 @@ public class TourGuideService {
 	private final RewardCentral rewardCentral = new RewardCentral();
 	public final Tracker tracker;
 	boolean testMode = true;
-	Executor executor = Executors.newFixedThreadPool(50);
+
+	//ForkJoinPool have 7 thread by default, we use I/O bound, we can up easily to 40 (trade-off between resource and performance for the requested task)
+	Executor executor = Executors.newFixedThreadPool(40);
 
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
@@ -90,15 +92,14 @@ public class TourGuideService {
 	public CompletableFuture<VisitedLocation> trackUserLocation(User user) {
 		// Use CompletableFuture.supplyAsync to obtain the user's location asynchronously
 		return CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()), executor)
-				.thenApply(visitedLocation -> {
-					// Add the visited location to the user's list of visited locations
-					user.addToVisitedLocations(visitedLocation);
-
+				.thenApply(location -> {
+					// Add location to the user's list of visited locations
+					user.addToVisitedLocations(location);
 					// Calculate the rewards for the user synchronously
 					rewardsService.calculateRewards(user);
 
-					// Return the visited location after rewards have been calculated
-					return visitedLocation;
+					// Return the location after rewards have been calculated
+					return location;
 				});
 	}
 
