@@ -62,13 +62,12 @@ public class TestPerformance {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		// Create a list of CompletableFutures for tracking locations
-		CompletableFuture<?>[] futures = allUsers.stream()
-				.map(tourGuideService::trackUserLocation)
-				.toArray(CompletableFuture[]::new);
+		// Track all user locations asynchronously and collect the futures into a list
+		List<CompletableFuture<VisitedLocation>> futures = allUsers.stream()
+				.map(tourGuideService::trackUserLocation).toList();
 
 		// Wait for all futures to complete
-		CompletableFuture.allOf(futures).join();
+		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
 		// Stop timing
 		stopWatch.stop();
@@ -83,30 +82,39 @@ public class TestPerformance {
 	}
 
 	@Test
-	public void highVolumeGetRewards() {
+	public void highVolumeGetRewards(){
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 
-		// Users should be incremented up to 100,000, and test finishes within 20
-		// minutes
-		InternalTestHelper.setInternalUserNumber(100);
+		// Users should be incremented up to 100,000, and test finishes within 20 minutes
+		InternalTestHelper.setInternalUserNumber(100000);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		Attraction attraction = gpsUtil.getAttractions().getFirst();
-		List<User> allUsers;
-		allUsers = tourGuideService.getAllUsers();
-		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
+		List<User> allUsers = tourGuideService.getAllUsers();
 
-		allUsers.forEach(rewardsService::calculateRewards);
+		// Add a visited location for each user
+		allUsers.forEach(user -> user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date())));
 
+		// Calculate rewards asynchronously for each user
+		// Using CompletableFuture to handle asynchronous reward calculation
+		List<CompletableFuture<Void>> futures = allUsers.stream()
+				.map(user -> CompletableFuture.runAsync(() -> rewardsService.calculateRewards(user))).toList();
+
+		// Wait for all futures to complete
+		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join(); // Blocks until all futures are complete
+
+		// Check that rewards have been calculated for each user
 		for (User user : allUsers) {
-            assertFalse(user.getUserRewards().isEmpty());
+			assertFalse(user.getUserRewards().isEmpty());
 		}
+
 		stopWatch.stop();
 		tourGuideService.tracker.stopTracking();
 
+		// Print elapsed time and assert that it completes within 20 minutes
 		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())
 				+ " seconds.");
 		assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
