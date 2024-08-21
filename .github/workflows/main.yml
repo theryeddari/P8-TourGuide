@@ -77,3 +77,5 @@ jobs:
             -Dsonar.projectKey=theryeddari_P8-TourGuide
             -Dsonar.organization=theryeddari
             -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.java.binaries=TourGuide/target/classes
+            -Dsonar.java.test.binaries=TourGuide/target/test-classes
