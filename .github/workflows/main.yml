@@ -39,18 +39,23 @@ jobs:
           mkdir -p ~/.m2/repository/rewardCentral/rewardCentral/1.0.0
           cp TourGuide/libs/RewardCentral.jar ~/.m2/repository/rewardCentral/rewardCentral/1.0.0/rewardCentral-1.0.0.jar
 
-      # Build with Maven
-      - name: Build with Maven
+      # Build and package the application with Maven, including tests
+      - name: Build and package with Maven
         working-directory: TourGuide
-        run: mvn clean compile
-        
-      # Run tests with Maven (without performance test)
-      - name: Run tests with Maven
-        working-directory: TourGuide
-        run: mvn test -DskipTests -Dtest=!**/*PerformanceTest.java
-        
+        run: mvn clean package -Dtest=!**/*PerformanceTest.java
 
-      # Étape 5: Build des artefacts
-      - name: Build artifacts with Maven
-        working-directory: TourGuide
-        run: mvn package
+      # Build Docker image
+      - name: Build Docker image
+        run: docker build -t my-app-image:latest
+
+      # Push Docker image to registry
+      - name: Push Docker image
+        run: docker push my-app-image:latest
+
+      # SAST Acommnalyse statique
+      - name: Run SonarQube analysis
+        uses: sonarsource/sonarcloud-github-action@v2
+        with:
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
+        env:
+          SONAR_HOST_URL: 'https://sonarcloud.io'
