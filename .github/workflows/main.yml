@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -35,22 +35,22 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      # Check if jar files exist in libs
+      # Check if jar files exist with correct names
       - name: Check if jar files exist
         run: |
-          if [ -f TourGuide/libs/gpsUtil-1.0.0.jar ]; then echo "gpsUtil-1.0.0.jar found"; else echo "gpsUtil-1.0.0.jar not found"; fi
-          if [ -f TourGuide/libs/tripPricer-1.0.0.jar ]; then echo "tripPricer-1.0.0.jar found"; else echo "tripPricer-1.0.0.jar not found"; fi
-          if [ -f TourGuide/libs/rewardCentral-1.0.0.jar ]; then echo "rewardCentral-1.0.0.jar found"; else echo "rewardCentral-1.0.0.jar not found"; fi
+          if [ -f TourGuide/libs/gpsUtil.jar ]; then echo "gpsUtil.jar found"; else echo "gpsUtil.jar not found"; fi
+          if [ -f TourGuide/libs/TripPricer.jar ]; then echo "TripPricer.jar found"; else echo "TripPricer.jar not found"; fi
+          if [ -f TourGuide/libs/RewardCentral.jar ]; then echo "RewardCentral.jar found"; else echo "RewardCentral.jar not found"; fi
 
       # Create local Maven repository structure and copy local dependencies
       - name: Copy local dependencies
         run: |
           mkdir -p ~/.m2/repository/gpsUtil/gpsUtil/1.0.0
-          cp TourGuide/libs/gpsUtil-1.0.0.jar ~/.m2/repository/gpsUtil/gpsUtil/1.0.0/gpsUtil-1.0.0.jar
+          cp TourGuide/libs/gpsUtil.jar ~/.m2/repository/gpsUtil/gpsUtil/1.0.0/gpsUtil-1.0.0.jar
           mkdir -p ~/.m2/repository/tripPricer/tripPricer/1.0.0
-          cp TourGuide/libs/tripPricer-1.0.0.jar ~/.m2/repository/tripPricer/tripPricer/1.0.0/tripPricer-1.0.0.jar
+          cp TourGuide/libs/TripPricer.jar ~/.m2/repository/tripPricer/tripPricer/1.0.0/tripPricer-1.0.0.jar
           mkdir -p ~/.m2/repository/rewardCentral/rewardCentral/1.0.0
-          cp TourGuide/libs/rewardCentral-1.0.0.jar ~/.m2/repository/rewardCentral/rewardCentral/1.0.0/rewardCentral-1.0.0.jar
+          cp TourGuide/libs/RewardCentral.jar ~/.m2/repository/rewardCentral/rewardCentral/1.0.0/rewardCentral-1.0.0.jar
 
       # Build with Maven
       - name: Build with Maven
