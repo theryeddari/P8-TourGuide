@@ -42,10 +42,15 @@ jobs:
       # Build with Maven
       - name: Build with Maven
         working-directory: TourGuide
-        run: mvn clean install -DskipTests -Dtest=!**/*PerformanceTest.java
-
-      # Run tests with Maven
+        run: mvn clean compile
+        
+      # Run tests with Maven (without performance test)
       - name: Run tests with Maven
         working-directory: TourGuide
         run: mvn test -DskipTests -Dtest=!**/*PerformanceTest.java
+        
 
+      # Étape 5: Build des artefacts
+      - name: Build artifacts with Maven
+        working-directory: TourGuide
+        run: mvn package
