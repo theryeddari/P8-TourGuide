@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
   workflow_dispatch:
 
 jobs:
@@ -19,14 +19,14 @@ jobs:
           ref: master  # Ensure you're checking out the master branch where your files are
 
       # List directory contents for debugging
-      - name: List directory contents
-        run: |
-          echo "Listing root directory"
-          ls -la
-          echo "Listing TourGuide directory"
-          ls -la TourGuide
-          echo "Listing libs directory"
-          ls -la TourGuide/libs
+      - name: List root directory
+        run: ls -la
+
+      - name: List TourGuide directory
+        run: ls -la TourGuide
+
+      - name: List libs directory
+        run: ls -la TourGuide/libs
 
       # Set up JDK 21
       - name: Set up JDK 21
@@ -34,6 +34,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+
+      # Check if jar files exist in libs
+      - name: Check if jar files exist
+        run: |
+          if [ -f TourGuide/libs/gpsUtil-1.0.0.jar ]; then echo "gpsUtil-1.0.0.jar found"; else echo "gpsUtil-1.0.0.jar not found"; fi
+          if [ -f TourGuide/libs/tripPricer-1.0.0.jar ]; then echo "tripPricer-1.0.0.jar found"; else echo "tripPricer-1.0.0.jar not found"; fi
+          if [ -f TourGuide/libs/rewardCentral-1.0.0.jar ]; then echo "rewardCentral-1.0.0.jar found"; else echo "rewardCentral-1.0.0.jar not found"; fi
 
       # Create local Maven repository structure and copy local dependencies
       - name: Copy local dependencies
