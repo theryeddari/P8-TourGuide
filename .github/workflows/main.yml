@@ -34,16 +34,17 @@ jobs:
       - name: Copy local dependencies
         run: |
           mkdir -p ~/.m2/repository/gpsUtil/gpsUtil/1.0.0
-          cp path/to/gpsUtil-1.0.0.jar ~/.m2/repository/gpsUtil/gpsUtil/1.0.0/gpsUtil-1.0.0.jar
+          cp libs/gpsUtil-1.0.0.jar ~/.m2/repository/gpsUtil/gpsUtil/1.0.0/gpsUtil-1.0.0.jar
           mkdir -p ~/.m2/repository/tripPricer/tripPricer/1.0.0
-          cp path/to/tripPricer-1.0.0.jar ~/.m2/repository/tripPricer/tripPricer/1.0.0/tripPricer-1.0.0.jar
+          cp libs/tripPricer-1.0.0.jar ~/.m2/repository/tripPricer/tripPricer/1.0.0/tripPricer-1.0.0.jar
           mkdir -p ~/.m2/repository/rewardCentral/rewardCentral/1.0.0
-          cp path/to/rewardCentral-1.0.0.jar ~/.m2/repository/rewardCentral/rewardCentral/1.0.0/rewardCentral-1.0.0.jar
+          cp libs/rewardCentral-1.0.0.jar ~/.m2/repository/rewardCentral/rewardCentral/1.0.0/rewardCentral-1.0.0.jar
 
       - name: List files for debugging
         run: |
           ls -la
           ls -la TourGuide
+          ls -la local-libs
 
       - name: Build with Maven
         working-directory: TourGuide
