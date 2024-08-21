@@ -56,13 +56,15 @@ jobs:
         working-directory: TourGuide
         run: mvn clean package -Dtest=!**/*TestPerformance.java
 
-      # Build Docker image
       - name: Build Docker image
-        run: docker build -t my-app-image:latest -f TourGuide/Dockerfile TourGuide
+        working-directory: TourGuide
+        run: docker build -t ghcr.io/${{ github.repository }}/my-app-image:latest .
 
-      # Push Docker image to registry
+      - name: Log in to GitHub Container Registry
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: Push Docker image
-        run: docker push my-app-image:latest
+        run: docker push ghcr.io/${{ github.repository }}/my-app-image:latest
 
       # Run SonarQube analysis (SAST)
       - name: Run SonarCloud analysis
