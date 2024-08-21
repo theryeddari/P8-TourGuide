@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "master" ]   # Branche où se trouve le code source
+    branches: [ "master" ]   # Branche contenant le code source et le pom.xml
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master" ]   # Branche contenant le code source et le pom.xml
   workflow_dispatch:
 
 jobs:
@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout code from master branch
         uses: actions/checkout@v4
         with:
-          ref: master  # Branche à vérifier
+          ref: master  # Vérifie la branche master où se trouvent le code source et le pom.xml
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -30,6 +30,9 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
+
+      - name: List files for debugging
+        run: ls -la
 
       - name: Build with Maven
         run: mvn clean install -DskipTests
