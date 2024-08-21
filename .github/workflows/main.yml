@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "master" ]   # Branche contenant le code source et le pom.xml
+    branches: [ "master" ]  # Branche contenant le code source et le pom.xml
   pull_request:
-    branches: [ "master" ]   # Branche contenant le code source et le pom.xml
+    branches: [ "master" ]  # Branche contenant le code source et le pom.xml
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
       - name: Checkout code from master branch
         uses: actions/checkout@v4
         with:
-          ref: master  # Vérifie la branche master où se trouvent le code source et le pom.xml
+          ref: master  # Vérifie la branche master
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -33,6 +33,9 @@ jobs:
 
       - name: List files for debugging
         run: ls -la
+
+      - name: Change directory to subfolder if necessary
+        run: cd TourGuide  # Modifiez ce chemin si votre répertoire est différent
 
       - name: Build with Maven
         run: mvn clean install -DskipTests
