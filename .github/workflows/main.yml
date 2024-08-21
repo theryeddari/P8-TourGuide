@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "master" ]  # Branche contenant le code source et le pom.xml
+    branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]  # Branche contenant le code source et le pom.xml
+    branches: [ "master" ]
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
       - name: Checkout code from master branch
         uses: actions/checkout@v4
         with:
-          ref: master  # Vérifie la branche master
+          ref: master
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -31,12 +31,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      - name: Copy local dependencies
+        run: |
+          mkdir -p ~/.m2/repository/gpsUtil/gpsUtil/1.0.0
+          cp path/to/gpsUtil-1.0.0.jar ~/.m2/repository/gpsUtil/gpsUtil/1.0.0/gpsUtil-1.0.0.jar
+          mkdir -p ~/.m2/repository/tripPricer/tripPricer/1.0.0
+          cp path/to/tripPricer-1.0.0.jar ~/.m2/repository/tripPricer/tripPricer/1.0.0/tripPricer-1.0.0.jar
+          mkdir -p ~/.m2/repository/rewardCentral/rewardCentral/1.0.0
+          cp path/to/rewardCentral-1.0.0.jar ~/.m2/repository/rewardCentral/rewardCentral/1.0.0/rewardCentral-1.0.0.jar
+
       - name: List files for debugging
         run: |
           ls -la
-          ls -la TourGuide  # Liste les fichiers dans le sous-répertoire TourGuide
+          ls -la TourGuide
 
-      - name: Change directory to TourGuide
+      - name: Build with Maven
         working-directory: TourGuide
         run: mvn clean install -DskipTests
 
