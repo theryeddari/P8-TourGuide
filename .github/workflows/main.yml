@@ -58,13 +58,13 @@ jobs:
 
       - name: Build Docker image
         working-directory: TourGuide
-        run: docker build -t ghcr.io/${{ github.repository }}/my-app-image:latest .
+        run: docker build -t ghcr.io/theryeddari/p8-tourguide/my-app-image:latest .
 
       - name: Log in to GitHub Container Registry
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push Docker image
-        run: docker push ghcr.io/${{ github.repository }}/my-app-image:latest
+        run: docker push ghcr.io/theryeddari/p8-tourguide/my-app-image:latest
 
       # Run SonarQube analysis (SAST)
       - name: Run SonarCloud analysis
