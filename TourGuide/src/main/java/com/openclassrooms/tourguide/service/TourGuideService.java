@@ -2,10 +2,10 @@ package com.openclassrooms.tourguide.service;
 
 import com.openclassrooms.tourguide.dto.InfoAboutNearbyAttractionDTO;
 import com.openclassrooms.tourguide.dto.NearbyAttractionResponse;
-import com.openclassrooms.tourguide.helper.InternalTestHelper;
-import com.openclassrooms.tourguide.tracker.Tracker;
-import com.openclassrooms.tourguide.user.User;
-import com.openclassrooms.tourguide.user.UserReward;
+import com.openclassrooms.tourguide.utils.helper.InternalTestHelper;
+import com.openclassrooms.tourguide.service.tracker.Tracker;
+import com.openclassrooms.tourguide.model.user.User;
+import com.openclassrooms.tourguide.model.user.UserReward;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -26,6 +26,9 @@ import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
+
+import static exception.RewardsServiceException.*;
+import static exception.TourGuideServiceException.*;
 
 @Service
 public class TourGuideService {
@@ -61,7 +64,7 @@ public class TourGuideService {
 		return user.getUserRewards();
 	}
 
-	public VisitedLocation getUserLocation(User user) {
+	public VisitedLocation getUserLocation(User user) throws TrackUserLocationException {
 		// we retrieve the location in the user details if it exists otherwise we just launch the tracker to retrieve it
         return (!user.getVisitedLocations().isEmpty()) ? user.getLastVisitedLocation() : trackUserLocation(user).join();
 	}
@@ -89,18 +92,27 @@ public class TourGuideService {
 		return providers;
 	}
 
-	public CompletableFuture<VisitedLocation> trackUserLocation(User user) {
-		// Use CompletableFuture.supplyAsync to obtain the user's location asynchronously
-		return CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()), executor)
-				.thenApply(location -> {
-					// Add location to the user's list of visited locations
-					user.addToVisitedLocations(location);
-					// Calculate the rewards for the user synchronously
-					rewardsService.calculateRewards(user);
+	public CompletableFuture<VisitedLocation> trackUserLocation(User user) throws TrackUserLocationException {
+		try {
+			// Use CompletableFuture.supplyAsync to obtain the user's location asynchronously
+			return CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()), executor)
+					.thenApply(location -> {
+						// Add location to the user's list of visited locations
+						user.addToVisitedLocations(location);
+						// Calculate the rewards for the user synchronously
 
-					// Return the location after rewards have been calculated
-					return location;
-				});
+                        try {
+                            rewardsService.calculateRewards(user);
+                        } catch (CalulateRewardsException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        // Return the location after rewards have been calculated
+						return location;
+					});
+		} catch (Exception e) {
+			throw new TrackUserLocationException(e);
+		}
 	}
 
 

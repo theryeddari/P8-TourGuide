@@ -1,5 +1,6 @@
 package com.openclassrooms.tourguide;
 
+import static exception.TourGuideServiceException.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -8,6 +9,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
+import exception.RewardsServiceException;
+import exception.TourGuideServiceException;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.Test;
 
@@ -15,10 +18,10 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
-import com.openclassrooms.tourguide.helper.InternalTestHelper;
+import com.openclassrooms.tourguide.utils.helper.InternalTestHelper;
 import com.openclassrooms.tourguide.service.RewardsService;
 import com.openclassrooms.tourguide.service.TourGuideService;
-import com.openclassrooms.tourguide.user.User;
+import com.openclassrooms.tourguide.model.user.User;
 
 public class TestPerformance {
 
@@ -64,7 +67,13 @@ public class TestPerformance {
 
 		// Track all user locations asynchronously and collect the futures into a list
 		List<CompletableFuture<VisitedLocation>> futures = allUsers.stream()
-				.map(tourGuideService::trackUserLocation).toList();
+				.map(user -> {
+                    try {
+                        return tourGuideService.trackUserLocation(user);
+                    } catch (TrackUserLocationException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).toList();
 
 		// Wait for all futures to complete
 		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -101,7 +110,13 @@ public class TestPerformance {
 		// Calculate rewards asynchronously for each user
 		// Using CompletableFuture to handle asynchronous reward calculation
 		List<CompletableFuture<Void>> futures = allUsers.stream()
-				.map(user -> CompletableFuture.runAsync(() -> rewardsService.calculateRewards(user))).toList();
+				.map(user -> CompletableFuture.runAsync(() -> {
+                    try {
+                        rewardsService.calculateRewards(user);
+                    } catch (RewardsServiceException.CalulateRewardsException e) {
+                        throw new RuntimeException(e);
+                    }
+                })).toList();
 
 		// Wait for all futures to complete
 		CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join(); // Blocks until all futures are complete

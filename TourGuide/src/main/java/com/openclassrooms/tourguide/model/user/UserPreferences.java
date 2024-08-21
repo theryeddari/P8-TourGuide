@@ -1,4 +1,4 @@
-package com.openclassrooms.tourguide.user;
+package com.openclassrooms.tourguide.model.user;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

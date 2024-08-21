@@ -1,4 +1,4 @@
-package com.openclassrooms.tourguide.helper;
+package com.openclassrooms.tourguide.utils.helper;
 
 import lombok.Getter;
 import lombok.Setter;

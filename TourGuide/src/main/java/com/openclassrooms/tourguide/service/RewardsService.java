@@ -1,7 +1,9 @@
 package com.openclassrooms.tourguide.service;
 
-import com.openclassrooms.tourguide.user.User;
-import com.openclassrooms.tourguide.user.UserReward;
+import com.openclassrooms.tourguide.model.user.User;
+import com.openclassrooms.tourguide.model.user.UserReward;
+import exception.RewardsServiceException;
+import exception.RewardsServiceException.CalulateRewardsException;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
@@ -40,7 +42,7 @@ public class RewardsService {
         this.rewardsCentral = rewardCentral;
     }
 
-    public void calculateRewards(User user) {
+    public void calculateRewards(User user) throws CalulateRewardsException {
         try {
             semaphore.acquire();
             // Retrieve the user's visited locations
@@ -67,7 +69,7 @@ public class RewardsService {
                                 .map(attraction -> new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)))).forEach(user::addUserReward);
             }).join();
         }catch (Exception e) {
-            e.printStackTrace();
+            throw new CalulateRewardsException(e);
         }
         finally {
             semaphore.release();

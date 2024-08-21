@@ -1,17 +1,20 @@
-package com.openclassrooms.tourguide.tracker;
+package com.openclassrooms.tourguide.service.tracker;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import exception.TourGuideServiceException;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.openclassrooms.tourguide.service.TourGuideService;
-import com.openclassrooms.tourguide.user.User;
+import com.openclassrooms.tourguide.model.user.User;
+import org.springframework.stereotype.Service;
 
+@Service
 public class Tracker extends Thread {
 	private final Logger logger = LogManager.getLogger(Tracker.class);
 	private static final long trackingPollingInterval = TimeUnit.MINUTES.toSeconds(5);
@@ -45,7 +48,13 @@ public class Tracker extends Thread {
 			List<User> users = tourGuideService.getAllUsers();
             logger.debug("Begin Tracker. Tracking {} users.", users.size());
 			stopWatch.start();
-			users.forEach(tourGuideService::trackUserLocation);
+			users.forEach(user -> {
+                try {
+                    tourGuideService.trackUserLocation(user);
+                } catch (TourGuideServiceException.TrackUserLocationException e) {
+                    throw new RuntimeException(e);
+                }
+            });
 			stopWatch.stop();
             logger.debug("Tracker Time Elapsed: {} seconds.", TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 			stopWatch.reset();
