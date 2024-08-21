@@ -12,12 +12,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code from master branch
+      # Checkout code from master branch
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           ref: master
 
-      - name: List directory contents for debugging
+      # List directory contents for debugging
+      - name: List directory contents
         run: |
           echo "Listing root directory"
           ls -la
@@ -26,12 +28,14 @@ jobs:
           echo "Listing libs directory"
           ls -la TourGuide/libs
 
+      # Set up JDK 21
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '21'
 
+      # Copy local dependencies from the correct path
       - name: Copy local dependencies
         run: |
           mkdir -p ~/.m2/repository/gpsUtil/gpsUtil/1.0.0
@@ -41,10 +45,12 @@ jobs:
           mkdir -p ~/.m2/repository/rewardCentral/rewardCentral/1.0.0
           cp TourGuide/libs/rewardCentral-1.0.0.jar ~/.m2/repository/rewardCentral/rewardCentral/1.0.0/rewardCentral-1.0.0.jar
 
+      # Build with Maven
       - name: Build with Maven
         working-directory: TourGuide
         run: mvn clean install -DskipTests
 
+      # Run tests with Maven
       - name: Run tests with Maven
         working-directory: TourGuide
         run: mvn test
