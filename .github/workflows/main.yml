@@ -27,18 +27,19 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('TourGuide/**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
 
       - name: List files for debugging
-        run: ls -la
+        run: |
+          ls -la
+          ls -la TourGuide  # Liste les fichiers dans le sous-répertoire TourGuide
 
-      - name: Change directory to subfolder if necessary
-        run: cd TourGuide  # Modifiez ce chemin si votre répertoire est différent
-
-      - name: Build with Maven
+      - name: Change directory to TourGuide
+        working-directory: TourGuide
         run: mvn clean install -DskipTests
 
       - name: Run tests with Maven
+        working-directory: TourGuide
         run: mvn test
