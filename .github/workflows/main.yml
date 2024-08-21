@@ -32,14 +32,6 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('TourGuide/**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
       - name: Copy local dependencies
         run: |
           mkdir -p ~/.m2/repository/gpsUtil/gpsUtil/1.0.0
