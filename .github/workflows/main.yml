@@ -54,7 +54,7 @@ jobs:
       # Build and package the application with Maven, including tests
       - name: Build and package with Maven
         working-directory: TourGuide
-        run: mvn clean package -Dtest=!**/*PerformanceTest.java
+        run: mvn clean package -Dtest=!**/*TestPerformance.java
 
       # Build Docker image
       - name: Build Docker image
