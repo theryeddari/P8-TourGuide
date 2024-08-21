@@ -67,10 +67,14 @@ jobs:
       - name: Push Docker image
         run: docker push ghcr.io/theryeddari/p8-tourguide/my-app-image:latest
 
-      # Run SonarQube analysis (SAST)
-      - name: Run SonarCloud analysis
+      # Run SonarCloud analysis
+      - name: Run SonarQube analysis
         uses: sonarsource/sonarcloud-github-action@v2
-        with:
-          token: ${{ secrets.SONAR_TOKEN }}
         env:
-          SONAR_HOST_URL: 'https://sonarcloud.io'
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=theryeddari_P8-TourGuide
+            -Dsonar.organization=theryeddari
+            -Dsonar.host.url=https://sonarcloud.io
