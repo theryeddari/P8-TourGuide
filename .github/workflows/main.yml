@@ -58,7 +58,7 @@ jobs:
 
       # Build Docker image
       - name: Build Docker image
-        run: docker build -t my-app-image:latest .
+        run: docker build -t my-app-image:latest -f TourGuide/Dockerfile TourGuide
 
       # Push Docker image to registry
       - name: Push Docker image
