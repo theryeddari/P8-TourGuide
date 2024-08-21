@@ -17,6 +17,15 @@ jobs:
         with:
           ref: master
 
+      - name: List directory contents for debugging
+        run: |
+          echo "Listing root directory"
+          ls -la
+          echo "Listing TourGuide directory"
+          ls -la TourGuide
+          echo "Listing libs directory"
+          ls -la TourGuide/libs
+
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
@@ -39,11 +48,6 @@ jobs:
           cp TourGuide/libs/tripPricer-1.0.0.jar ~/.m2/repository/tripPricer/tripPricer/1.0.0/tripPricer-1.0.0.jar
           mkdir -p ~/.m2/repository/rewardCentral/rewardCentral/1.0.0
           cp TourGuide/libs/rewardCentral-1.0.0.jar ~/.m2/repository/rewardCentral/rewardCentral/1.0.0/rewardCentral-1.0.0.jar
-
-      - name: List files for debugging
-        run: |
-          ls -la
-          ls -la TourGuide/libs
 
       - name: Build with Maven
         working-directory: TourGuide
