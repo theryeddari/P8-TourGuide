@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "master" ]   # Branche du code source
+    branches: [ "master" ]   # Branche où se trouve le code source
   pull_request:
-    branches: [ "master" ]   # Branche du code source
+    branches: [ "master" ]
   workflow_dispatch:
 
 jobs:
