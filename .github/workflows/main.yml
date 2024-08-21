@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code from master branch
+      # Checkout the correct branch
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: master  # Ensure you're checking out the master branch where your files are
 
       # List directory contents for debugging
       - name: List directory contents
@@ -35,7 +35,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      # Copy local dependencies from the correct path
+      # Create local Maven repository structure and copy local dependencies
       - name: Copy local dependencies
         run: |
           mkdir -p ~/.m2/repository/gpsUtil/gpsUtil/1.0.0
