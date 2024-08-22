@@ -65,7 +65,7 @@ jobs:
 
 
       - name: Push Docker image
-        run: docker push ghcr.io/theryeddari/p8-tourguide/my-app-image:latest
+        run: docker push ghcr.io/theryeddari/p8-tourguide/TourGuide-app:latest
 
       # Run SonarCloud analysis
       - name: Run SonarQube analysis
