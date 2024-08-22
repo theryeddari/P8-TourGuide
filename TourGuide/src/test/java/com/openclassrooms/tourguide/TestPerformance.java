@@ -4,7 +4,7 @@ import com.openclassrooms.tourguide.model.user.User;
 import com.openclassrooms.tourguide.service.RewardsService;
 import com.openclassrooms.tourguide.service.TourGuideService;
 import com.openclassrooms.tourguide.utils.helper.InternalTestHelper;
-import exception.RewardsServiceException;
+import com.openclassrooms.tourguide.exception.RewardsServiceException;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-import static exception.TourGuideServiceException.TrackUserLocationException;
+import static com.openclassrooms.tourguide.exception.TourGuideServiceException.TrackUserLocationException;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

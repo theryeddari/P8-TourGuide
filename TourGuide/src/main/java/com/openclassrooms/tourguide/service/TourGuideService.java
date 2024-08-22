@@ -24,8 +24,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
-import static exception.RewardsServiceException.CalulateRewardsException;
-import static exception.TourGuideServiceException.TrackUserLocationException;
+import static com.openclassrooms.tourguide.exception.RewardsServiceException.CalulateRewardsException;
+import static com.openclassrooms.tourguide.exception.TourGuideServiceException.TrackUserLocationException;
 
 /**
  * The {@code TourGuideService} class handles operations related to the Tour Guide system user,

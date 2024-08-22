@@ -2,7 +2,7 @@ package com.openclassrooms.tourguide.service.tracker;
 
 import com.openclassrooms.tourguide.model.user.User;
 import com.openclassrooms.tourguide.service.TourGuideService;
-import exception.TourGuideServiceException;
+import com.openclassrooms.tourguide.exception.TourGuideServiceException;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

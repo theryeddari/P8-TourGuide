@@ -1,4 +1,4 @@
-package exception;
+package com.openclassrooms.tourguide.exception;
 
 import com.openclassrooms.tourguide.constant.ConstantException;
 

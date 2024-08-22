@@ -2,7 +2,7 @@ package com.openclassrooms.tourguide.service;
 
 import com.openclassrooms.tourguide.model.user.User;
 import com.openclassrooms.tourguide.model.user.UserReward;
-import exception.RewardsServiceException.CalulateRewardsException;
+import com.openclassrooms.tourguide.exception.RewardsServiceException.CalulateRewardsException;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;

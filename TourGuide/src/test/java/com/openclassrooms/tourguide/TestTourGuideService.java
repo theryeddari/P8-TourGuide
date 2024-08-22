@@ -8,16 +8,22 @@ import com.openclassrooms.tourguide.utils.helper.InternalTestHelper;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.VisitedLocation;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import rewardCentral.RewardCentral;
 import tripPricer.Provider;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletionException;
 
-import static exception.TourGuideServiceException.TrackUserLocationException;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.openclassrooms.tourguide.exception.TourGuideServiceException.TrackUserLocationException;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class TestTourGuideService {
 
     @Test

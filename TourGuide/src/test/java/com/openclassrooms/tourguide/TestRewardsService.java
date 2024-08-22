@@ -5,25 +5,28 @@ import com.openclassrooms.tourguide.model.user.UserReward;
 import com.openclassrooms.tourguide.service.RewardsService;
 import com.openclassrooms.tourguide.service.TourGuideService;
 import com.openclassrooms.tourguide.utils.helper.InternalTestHelper;
-import exception.RewardsServiceException;
+import com.openclassrooms.tourguide.exception.RewardsServiceException;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import rewardCentral.RewardCentral;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static exception.RewardsServiceException.CalulateRewardsException;
-import static exception.TourGuideServiceException.TrackUserLocationException;
+import static com.openclassrooms.tourguide.exception.RewardsServiceException.CalulateRewardsException;
+import static com.openclassrooms.tourguide.exception.TourGuideServiceException.TrackUserLocationException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class TestRewardsService {
 
     @Test

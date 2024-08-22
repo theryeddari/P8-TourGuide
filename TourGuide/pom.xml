@@ -101,7 +101,6 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
-
 		<!-- Plugin JaCoCo for coverage code -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
@@ -112,6 +111,12 @@
 					<!--config exclude class not interesting to test-->
 					<excludes>
 						<exclude>**/TestPerformance</exclude>
+						<exclude>com/openclassrooms/tourguide/dto/**</exclude>
+						<exclude>com/openclassrooms/tourguide/config/**</exclude>
+						<exclude>com/openclassrooms/tourguide/constant/**</exclude>
+						<exclude>com/openclassrooms/tourguide/controller/**</exclude>
+						<exclude>com/openclassrooms/tourguide/model/**</exclude>
+						<exclude>com/openclassrooms/tourguide/utils/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>

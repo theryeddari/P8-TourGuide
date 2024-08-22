@@ -16,7 +16,7 @@ import tripPricer.Provider;
 
 import java.util.List;
 
-import static exception.TourGuideServiceException.TrackUserLocationException;
+import static com.openclassrooms.tourguide.exception.TourGuideServiceException.TrackUserLocationException;
 
 
 /**
