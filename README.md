@@ -2,6 +2,10 @@
 
 **TourGuide** est une application Spring Boot conçue pour recommander aux utilisateurs des attractions touristiques à proximité. Face à une croissance rapide du nombre d'utilisateurs, des améliorations ont été apportées pour optimiser les performances et corriger des bugs critiques.
 
+#Document de présentation ffonctionnel et Technique
+
+Vous trouverez ici le document [Document de présentation Tour Guide](https://github.com/theryeddari/P8-TourGuide/blob/0b07aedbef2358009283224ffca095af8d911081/Documentation%20TourGuide.pdf)
+
 ## Prérequis
 
 - **Java** : 21
