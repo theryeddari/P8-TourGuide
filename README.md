@@ -21,20 +21,20 @@ Pour toute utilisation du code, ajout ou modification veuillez creer une nouvell
 
 Clonez le dépôt de la branch Master:
 
-```sh
+```
 git clone https://github.com/theryeddari/P8-TourGuide.git
 ```
 Copier le code
-```sh
+```
 cd TourGuide
 ```
 Compilez et installez les dépendances :
 
-Run : 
-- mvn install:install-file -Dfile="libs/gpsUtil.jar" -DgroupId="gpsUtil" -DartifactId="gpsUtil" -Dversion="1.0.0" -Dpackaging="jar"  
-- mvn install:install-file -Dfile="libs/RewardCentral.jar" -DgroupId="rewardCentral" -DartifactId="rewardCentral" -Dversion="1.0.0" -Dpackaging="jar"  
-- mvn install:install-file -Dfile="libs/TripPricer.jar" -DgroupId="tripPricer" -DartifactId="tripPricer" -Dversion="1.0.0" -Dpackaging="jar"
-
+```
+mvn install:install-file -Dfile="libs/gpsUtil.jar" -DgroupId="gpsUtil" -DartifactId="gpsUtil" -Dversion="1.0.0" -Dpackaging="jar"  
+mvn install:install-file -Dfile="libs/RewardCentral.jar" -DgroupId="rewardCentral" -DartifactId="rewardCentral" -Dversion="1.0.0" -Dpackaging="jar"  
+mvn install:install-file -Dfile="libs/TripPricer.jar" -DgroupId="tripPricer" -DartifactId="tripPricer" -Dversion="1.0.0" -Dpackaging="jar"
+```
 
 ```
 ./mvnw clean install
