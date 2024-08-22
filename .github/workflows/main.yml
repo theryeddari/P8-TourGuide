@@ -48,20 +48,6 @@ jobs:
         working-directory: TourGuide
         run: mvn clean package
 
-      # Archive JaCoCo reports
-      - name: Archive JaCoCo reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: jacoco-report
-          path: TourGuide/target/site/jacoco
-
-      # Archive Surefire reports
-      - name: Archive Surefire reports
-        uses: actions/upload-artifact@v3
-        with:
-          name: surefire-reports
-          path: TourGuide/target/surefire-reports
-
       # Build Docker image
       - name: Build Docker image
         working-directory: TourGuide
