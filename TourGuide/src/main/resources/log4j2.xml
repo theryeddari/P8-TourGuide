@@ -64,7 +64,7 @@
             The default logger configuration that captures all log messages.
             Set to DEBUG level to capture all messages including debug, info, and error.
         -->
-        <Root level="debug">
+        <Root name="org.springframework.web.servlet.mvc.method.annotation" level="debug">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="File"/>
         </Root>
